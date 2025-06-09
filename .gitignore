@@ -19,13 +19,13 @@ Plastic SCM plugin
 Assets/Plugins/PlasticSCM*/
 assets/plugins/PlasticSCM*/
 
-Private files
+Private and sync files
 
-*.private
+.private
 .private.
-.private..meta
+UnityDirMonSyncFile
 
-IDE and editor folders
+IDE and editor files
 
 .vs/
 .vscode/
@@ -33,11 +33,7 @@ IDE and editor folders
 .gradle/
 .consulo/
 
-Exported objects
-
-ExportedObj/
-
-Unity project files
+Visual Studio project and solution files
 
 *.csproj
 *.unityproj
@@ -47,21 +43,18 @@ Unity project files
 *.user
 *.userprefs
 
-Unity auto-generated files
+MonoDevelop project files
 
 *.pidb
 *.booproj
+
+Build and debug files
+
 *.svd
 *.pdb
 *.mdb
 *.opendb
 *.VC.db
-
-Meta files for generated
-
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
 
 Logs and diagnostics
 
@@ -75,28 +68,21 @@ Build output
 *.app
 *.unitypackage
 
-Unity sync files
-
-UnityDirMonSyncFile*
-
-Addressables data files
+Addressables and StreamingAssets
 
 Assets/AddressableAssetsData//*.bin
 assets/addressableassetsdata//*.bin
-
-StreamingAssets data
-
-Assets/StreamingAssets/aa.meta
-assets/streamingassets//aa/
+Assets/StreamingAssets/**
+assets/streamingassets/**
 
 OS generated files
 
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
+.DS_Store*
 Thumbs.db
 Desktop.ini
+
+Exclude stray files
+
+ignore.conf
+ZombiesPrototype.sin
 
