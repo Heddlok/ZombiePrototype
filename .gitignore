@@ -1,0 +1,102 @@
+Unity generated folders
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Uu]serSettings/
+MemoryCaptures/
+[Ll]ogs/
+
+Asset Store Tools
+
+Assets/AssetStoreTools/
+assets/assetstoretools/
+
+Plastic SCM plugin
+
+Assets/Plugins/PlasticSCM*/
+assets/plugins/PlasticSCM*/
+
+Private files
+
+*.private
+.private.
+.private..meta
+
+IDE and editor folders
+
+.vs/
+.vscode/
+.idea/
+.gradle/
+.consulo/
+
+Exported objects
+
+ExportedObj/
+
+Unity project files
+
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+
+Unity auto-generated files
+
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+Meta files for generated
+
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+Logs and diagnostics
+
+sysinfo.txt
+crashlytics-build.properties
+
+Build output
+
+*.apk
+*.aab
+*.app
+*.unitypackage
+
+Unity sync files
+
+UnityDirMonSyncFile*
+
+Addressables data files
+
+Assets/AddressableAssetsData//*.bin
+assets/addressableassetsdata//*.bin
+
+StreamingAssets data
+
+Assets/StreamingAssets/aa.meta
+assets/streamingassets//aa/
+
+OS generated files
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+Thumbs.db
+Desktop.ini
+
