@@ -1,2 +1,0 @@
-Temp/ScriptUpdater/325267976/1020913082_PlayerDamageOnCollision.cs => Assets/PlayerDamageOnCollision.cs
-Temp/ScriptUpdater/325267976/156842341_Zombie.cs => Assets/Zombie.cs
