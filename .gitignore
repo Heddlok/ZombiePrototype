@@ -72,10 +72,8 @@ Build output
 
 Addressables and StreamingAssets
 
-Assets/AddressableAssetsData//*.bin
-assets/addressableassetsdata//*.bin
-Assets/StreamingAssets/**
-assets/streamingassets/**
+Assets/AddressableAssetsData/*.bin
+assets/addressableassetsdata/*.bin
 
 OS generated files
 
