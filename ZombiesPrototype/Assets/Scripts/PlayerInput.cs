@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 /// Handles player input for movement, look, and jump using Rigidbody-based physics.
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerInputNew : MonoBehaviour
+public class PlayerInput : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Movement speed in units per second")]
@@ -52,9 +52,16 @@ public class PlayerInputNew : MonoBehaviour
     private void OnEnable()  => inputActions.Player.Enable();
     private void OnDisable() => inputActions.Player.Disable();
 
+    private void OnDestroy()
+    {
+        // Ensure callbacks and asset are cleaned up
+        inputActions.Player.Disable();
+        inputActions.Dispose();
+    }
+
     private void Start()
     {
-        if (cameraTransform == null)
+        if (cameraTransform == null && Camera.main != null)
             cameraTransform = Camera.main.transform;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -67,8 +74,8 @@ public class PlayerInputNew : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation - mouseY, -90f, 90f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
-        // Ground check for jumping
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        // Ground check for jumping, guard against missing transform
+        isGrounded = groundCheck != null && Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     }
 
     private void FixedUpdate()

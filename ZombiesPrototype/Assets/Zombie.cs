@@ -15,7 +15,7 @@ public class Zombie : MonoBehaviour
     public int damage = 10;
 
     [Tooltip("Cooldown in seconds between damage ticks")]
-    public float damageCooldown = 1f;
+    public float damageCooldown = 3f;
 
     private NavMeshAgent agent;
     private float nextDamageTime;
