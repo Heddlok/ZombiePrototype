@@ -1,42 +1,108 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Important for the new Input System
+using UnityEngine.InputSystem;      // for Mouse and Keyboard
+using System.Collections;
+using Unity.VisualScripting;         // for IEnumerator
 
 public class TestWeapon : MonoBehaviour
 {
-    public float damage = 10f;
+    [Header("Weapon Settings")]
+    public float damage = 8f;
     public float range = 100f;
     public float fireRate = 5f;
 
+    [Header("Ammo Settings")]
+    [Tooltip("Rounds per magazine")]
+    public int magazineSize = 8;
+    [Tooltip("Total reserve ammo")]
+    public int reserveAmmo = 32;
+    [Tooltip("Seconds to reload")]
+    public float reloadTime = 2f;
+
+    [Header("References")]
     public Camera fpsCamera;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
 
     private float nextTimeToFire = 0f;
-
-    private PlayerInputActions inputActions;
+    private int currentAmmo;
+    private bool isReloading = false;
 
     private void Awake()
     {
-        inputActions = new PlayerInputActions();
-        inputActions.Player.Enable();
+        // start full
+        currentAmmo = magazineSize;
     }
 
-    void Update()
+    private void Update()
     {
-        if (Mouse.current.leftButton.isPressed && Time.time >= nextTimeToFire)
+        // If we’re in the middle of a reload, do nothing else
+        if (isReloading)
+            return;
+
+
+        // Reload input
+            if (Keyboard.current.rKey.wasPressedThisFrame
+                && currentAmmo < magazineSize
+                && reserveAmmo > 0)
+            {
+                StartCoroutine(Reload());
+                return;
+            }
+
+        // Fire input
+        if (Mouse.current.leftButton.isPressed 
+            && Time.time >= nextTimeToFire)
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
-            Shoot();
+            if (currentAmmo > 0)
+            {
+                nextTimeToFire = Time.time + 1f / fireRate;
+                currentAmmo--;
+                Debug.Log($"Shot fired. Ammo: {currentAmmo}/{magazineSize} | Reserve: {reserveAmmo}");
+                Shoot();
+
+                // Automatically reload if out of ammo
+                if (currentAmmo <= 0 && reserveAmmo > 0)
+                {
+                    Debug.Log("Out of ammo! Reloading...");
+                    StartCoroutine(Reload());
+                }
+            }
+            else
+            {
+                // Magazine is empty and reload in progress or not needed
+            }
         }
     }
 
-    void Shoot()
+    private IEnumerator Reload()
+    {
+        isReloading = true;
+        Debug.Log("Reloading...");
+
+        // Optionally play reload animation or sound
+
+        yield return new WaitForSeconds(reloadTime);
+
+        int ammoNeeded   = magazineSize - currentAmmo;
+        int ammoToReload = Mathf.Min(ammoNeeded, reserveAmmo);
+
+        currentAmmo += ammoToReload;
+        reserveAmmo -= ammoToReload;
+
+        Debug.Log($"Reloaded. Ammo: {currentAmmo}/{magazineSize} | Reserve: {reserveAmmo}");
+        isReloading = false;
+    }
+
+    private void Shoot()
     {
         if (muzzleFlash != null)
             muzzleFlash.Play();
 
-        RaycastHit hit;
-        if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, range))
+        if (Physics.Raycast(
+            fpsCamera.transform.position,
+            fpsCamera.transform.forward,
+            out var hit, 
+            range))
         {
             Debug.Log("Hit: " + hit.transform.name);
 
@@ -46,14 +112,13 @@ public class TestWeapon : MonoBehaviour
 
             if (impactEffect != null)
             {
-                GameObject impactGO = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                var impactGO = Instantiate(
+                    impactEffect,
+                    hit.point,
+                    Quaternion.LookRotation(hit.normal)
+                );
                 Destroy(impactGO, 2f);
             }
         }
-    }
-
-    private void OnDestroy()
-    {
-        inputActions.Player.Disable();
     }
 }

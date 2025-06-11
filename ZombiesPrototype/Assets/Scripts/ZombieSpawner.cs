@@ -44,7 +44,7 @@ public class ZombieSpawner : MonoBehaviour
             if (roundTimer <= 0f)
             {
                 round++;
-                zombieHealth *= 1.2f; // Increase health each round
+                zombieHealth *= 1.25f; // Increase health each round
                 StartRound();
                 spawningRound = false;
             }
