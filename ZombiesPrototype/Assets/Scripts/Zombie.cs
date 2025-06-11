@@ -20,6 +20,13 @@ public class Zombie : MonoBehaviour
     {
         // Cache the NavMeshAgent
         agent = GetComponent<NavMeshAgent>();
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            // Disable Rigidbody physics to let NavMeshAgent control movement
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
 
         // Auto-find the player if none assigned
         if (targetTransform == null)

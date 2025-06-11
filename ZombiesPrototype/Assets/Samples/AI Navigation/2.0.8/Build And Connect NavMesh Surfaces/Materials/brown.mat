@@ -24,9 +24,9 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: bcfcfca2e739042e2ab845c3727b47de, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
   - _DISABLE_SSR_TRANSPARENT
-  m_InvalidKeywords: []
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -97,7 +97,7 @@ Material:
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 0
     - _AlphaSrcBlend: 1
-    - _BUILTIN_QueueControl: -1
+    - _BUILTIN_QueueControl: 1
     - _BUILTIN_QueueOffset: 0
     - _BlendMode: 0
     - _BumpScale: 1
