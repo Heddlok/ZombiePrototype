@@ -916,10 +916,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: dcd3817d-fb2c-4f16-be05-4c08f3c8f58c
+  cloudProjectId: 6e076268-77d5-4797-89de-e5157e7f8981
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: ZombiesPrototypeV0.1
+  projectName: ZombiesPrototype
   organizationId: btgaming
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

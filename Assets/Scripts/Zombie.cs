@@ -1,64 +1,62 @@
 using UnityEngine;
+using UnityEngine.AI;
+
+[RequireComponent(typeof(NavMeshAgent), typeof(Collider))]
 public class Zombie : MonoBehaviour
 {
-   
+    [Tooltip("Transform of the player to chase. Will auto-find by tag if left blank.")]
     public Transform targetTransform;
-    public Transform zombiesTransform;
-    public GameObject player;
-    public PlayerManager playerManager; 
 
-    public int damageFromZombie;
+    [Tooltip("Damage dealt to the player on collision")]
+    public int damageFromZombie = 10;
 
-    public Vector3 pos;
+    [Tooltip("Zombie's starting health (unused here, but kept for later)")]
     public int health = 100;
-    public float speed = 5f;
-    void OnCollisionEnter(Collision collision)
-{
-        if (collision.GetComponent<Collider>().CompareTag("Zombie"))
-        {
-            playerManager.TakeDamage(damageFromZombie);
-       
-    }
-}
 
+    private NavMeshAgent agent;
+    private PlayerManager playerManager;
 
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-        GameObject player = GameObject.Find("Player");
-        if (player != null)
-            {
-                Vector3 pos = player.transform.position;
-                Debug.Log($"Found it at {pos}");
-            }
-        else
+        // Cache the NavMeshAgent
+        agent = GetComponent<NavMeshAgent>();
+
+        // Auto-find the player if none assigned
+        if (targetTransform == null)
         {
-        Debug.LogWarning("Could not find that object!");
+            var playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+                targetTransform = playerObj.transform;
+            else
+                Debug.LogError($"{name}: No GameObject tagged 'Player' found.");
         }
-        
+
+        // Cache PlayerManager for damage calls
+        if (targetTransform != null)
+        {
+            playerManager = targetTransform.GetComponent<PlayerManager>();
+            if (playerManager == null)
+                Debug.LogError($"{name}: PlayerManager component missing on Player!");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (targetTransform == null) return;
-        Vector3 playerToDistance = pos - transform.position;
-        transform.TransformDirection(pos);
-        Debug.Log($"Players Position{pos}");
-        Debug.Log($"Distance {playerToDistance}");
-        
-        Vector3 direction = (pos - transform.position).normalized;
-        if (direction != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(direction);
-                   
 
-        // 3) Move yourself along that direction
-        transform.position += direction * speed * Time.deltaTime;
-      
-        
+        // Tell the NavMeshAgent to move toward the player’s current position
+        agent.SetDestination(targetTransform.position);
+    }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Deal damage when we physically collide with the Player
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (playerManager != null)
+                playerManager.TakeDamage(damageFromZombie);
+            else
+                Debug.LogError($"{name}: Can't deal damage—PlayerManager is null!");
+        }
     }
 }

@@ -55,10 +55,10 @@ public class Zombie : MonoBehaviour
         agent.SetDestination(targetTransform.position);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         // Deal damage when we physically collide with the Player
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             if (playerManager != null)
                 playerManager.TakeDamage(damageFromZombie);

@@ -3,12 +3,19 @@ using UnityEngine;
 /// <summary>
 /// Applies damage to the player when colliding with zombies via Rigidbody collisions.
 /// </summary>
-[RequireComponent(typeof(Rigidbody), typeof(Collider))]
+[RequireComponent(typeof(Collider), typeof(PlayerManager))]
 public class PlayerDamageOnCollision : MonoBehaviour
 {
     [Tooltip("Amount of damage to take when colliding with a Zombie")]
     [SerializeField]
     private int damageFromZombie = 10;
+
+    [Tooltip("Minimum seconds between taking damage from zombies")]
+    [SerializeField]
+    private float damageCooldown = 3f;
+
+    // Timestamp of the last time damage was applied
+    private float _lastDamageTime = -Mathf.Infinity;
 
     private PlayerManager pm;
 
@@ -16,23 +23,20 @@ public class PlayerDamageOnCollision : MonoBehaviour
     {
         // Cache the PlayerManager component
         pm = GetComponent<PlayerManager>();
-
-        // Ensure this Rigidbody will send collision callbacks
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.isKinematic = false;
-        // If you don’t want physics forces to move the player, you can freeze:
-        // rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    // This runs every FixedUpdate while the zombie’s trigger overlaps us
+    private void OnTriggerStay(Collider other)
     {
-        // Only handle collisions with objects tagged "Zombie"
-        if (collision.GetComponent<Collider>().CompareTag("Zombie"))
+        if (other.CompareTag("Zombie") &&
+            Time.time >= _lastDamageTime + damageCooldown)
         {
             if (pm != null)
                 pm.TakeDamage(damageFromZombie);
             else
                 Debug.LogError("PlayerManager component missing on Player!");
+
+            _lastDamageTime = Time.time;
         }
     }
 }
