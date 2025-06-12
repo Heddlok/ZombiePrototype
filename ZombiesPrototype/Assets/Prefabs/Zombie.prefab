@@ -156,7 +156,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   damageFromZombie: 10
-  health: 100
+  health: 50
+  pointsPerBulletHit: 10
+  pointsPerKill: 120
 --- !u!65 &1659084127585401872
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(Collider))]
+[RequireComponent(typeof(NavMeshAgent), typeof(Collider), typeof(Rigidbody))]
 public class Zombie : MonoBehaviour
 {
     [Tooltip("Transform of the player to chase. Will auto-find by tag if left blank.")]
@@ -10,25 +10,27 @@ public class Zombie : MonoBehaviour
     [Tooltip("Damage dealt to the player on collision")]
     public int damageFromZombie = 10;
 
-    [Tooltip("Zombie's starting health (unused here, but kept for later)")]
-    public int health = 100;
+    [Tooltip("Zombie's starting health")]
+    public int health = 50;
+
+    [Tooltip("Points per bullet hit")]
+    public int pointsPerBulletHit = 10;
+
+    [Tooltip("Points per kill")]
+    public int pointsPerKill = 120;
 
     private NavMeshAgent agent;
     private PlayerManager playerManager;
 
     private void Awake()
     {
-        // Cache the NavMeshAgent
+        // Cache components
         agent = GetComponent<NavMeshAgent>();
         var rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            // Disable Rigidbody physics to let NavMeshAgent control movement
-            rb.isKinematic = true;
-            rb.useGravity = false;
-        }
+        rb.isKinematic = true;   // NavMeshAgent drives movement
+        rb.useGravity   = false;
 
-        // Auto-find the player if none assigned
+        // Find & cache the player
         if (targetTransform == null)
         {
             var playerObj = GameObject.FindWithTag("Player");
@@ -38,26 +40,26 @@ public class Zombie : MonoBehaviour
                 Debug.LogError($"{name}: No GameObject tagged 'Player' found.");
         }
 
-        // Cache PlayerManager for damage calls
         if (targetTransform != null)
         {
             playerManager = targetTransform.GetComponent<PlayerManager>();
             if (playerManager == null)
                 Debug.LogError($"{name}: PlayerManager component missing on Player!");
         }
+
+        // Make sure our collider is a trigger so OnTriggerEnter fires
+        GetComponent<Collider>().isTrigger = true;
     }
 
     private void Update()
     {
-        if (targetTransform == null) return;
-
-        // Tell the NavMeshAgent to move toward the player’s current position
-        agent.SetDestination(targetTransform.position);
+        if (targetTransform != null)
+            agent.SetDestination(targetTransform.position);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Deal damage when we physically collide with the Player
+        // Hurt the player on contact
         if (other.CompareTag("Player"))
         {
             if (playerManager != null)
@@ -65,5 +67,31 @@ public class Zombie : MonoBehaviour
             else
                 Debug.LogError($"{name}: Can't deal damage—PlayerManager is null!");
         }
+    }
+
+    /// <summary>
+    /// Call this when your gun raycast or projectile hits the zombie.
+    /// </summary>
+    /// <param name="damage">Amount of health to remove.</param>
+    public void TakeDamage(int damage)
+    {
+        // Award points for the hit
+        ScoreManager.Instance.AddPoints(pointsPerBulletHit);
+
+        // Apply damage
+        health -= damage;
+
+        // If dead, award kill points and destroy
+        if (health <= 0)
+        {
+            ScoreManager.Instance.AddPoints(pointsPerKill);
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log($"{name} has died.");
+        Destroy(gameObject);
     }
 }

@@ -589,7 +589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179ada4fa00e94c148910f5c680ae4c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 8
+  damage: 9
   range: 100
   fireRate: 5
   magazineSize: 8
